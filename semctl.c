@@ -10,6 +10,8 @@
 #include <sys/shm.h>
 
 #include "semctl.h"
+#include "const.h"
+#include "lock.h"
 
 int main(int argc, char *argv[])
 {
@@ -39,7 +41,7 @@ int main(int argc, char *argv[])
         // init sem val
         union semun arg;
         arg.val = 0;
-        if (semctl(semd, 0, SETVAL) != 0)
+        if (semctl(semd, 0, SETVAL, arg) != 0)
         {
             perror("semctl");
             return EXIT_FAILURE;
@@ -75,36 +77,15 @@ int main(int argc, char *argv[])
             perror("semget");
             return EXIT_FAILURE;
         }
-        struct sembuf op;
-        op.sem_flg = 0;
-        op.sem_num = 0;
 
-        // wait for sem
-        op.sem_op = 0;
-        if (semop(semd, &op, 1) == -1)
-        {
-            perror("semop");
-            return EXIT_FAILURE;
-        }
+        lock(semd);
 
-        // now sem released, increase it
-        op.sem_op = 1;
-        if (semop(semd, &op, 1) == -1)
-        {
-            perror("semop");
-            return EXIT_FAILURE;
-        }
         // display the whole file
         display_file();
 
-        // op.sem_op = -1;
-        // if (semop(semd, &op, 1) == -1)
-        // {
-        //     perror("semop");
-        //     return EXIT_FAILURE;
-        // }
-
         // remove semaphore, shared mem, and file
+
+        // since we are removing sem, we never have to release it
         semctl(semd, 0, IPC_RMID);
         
         puts("semaphore removed");
@@ -133,7 +114,6 @@ int main(int argc, char *argv[])
         // display the whole file
 
         display_file();
-        fclose(file);
 
         break;
     default:
@@ -165,10 +145,10 @@ void display_file()
         exit(EXIT_FAILURE);
     }
     puts("The story so far:");
-    char c;
-    while ((c = fgetc(f)) != EOF)
+    while (!feof(f))
     {
-        fputc(c, stdout);
+
+        fputc(fgetc(f), stdout);
     }
     fclose(f);
 }

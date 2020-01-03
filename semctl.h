@@ -1,9 +1,3 @@
-#define SEMKEY 121454
-#define SHMKEY 123456
-#define SHMSIZE sizeof(int)
-
-#include <stdio.h>
-#define FILENAME "story.txt"
 union semun {
                int              val;    /* Value for SETVAL */
                struct semid_ds *buf;    /* Buffer for IPC_STAT, IPC_SET */
