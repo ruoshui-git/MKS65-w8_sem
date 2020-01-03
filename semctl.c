@@ -145,10 +145,15 @@ void display_file()
         exit(EXIT_FAILURE);
     }
     puts("The story so far:");
-    while (!feof(f))
+    char c;
+    while (1)
     {
-
-        fputc(fgetc(f), stdout);
+        c = fgetc(f);
+        if (c == EOF)
+        {
+            break;
+        }
+        fputc(c, stdout);
     }
     fclose(f);
 }
