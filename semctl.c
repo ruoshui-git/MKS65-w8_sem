@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
             return EXIT_FAILURE;
         }
 
-        lock(semd);
+        lock_undo(semd);
 
         // display the whole file
         display_file();
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 
         // since we are removing sem, we never have to release it
         semctl(semd, 0, IPC_RMID);
-        
+
         puts("semaphore removed");
 
         shmd = shmget(SHMKEY, SHMSIZE, 0);
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
             perror("shmctl");
             return EXIT_FAILURE;
         }
-        
+
         if (remove(FILENAME) != 0)
         {
             perror("remove");

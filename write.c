@@ -27,7 +27,7 @@ int main(void)
     }
 
     puts("Trying to get in...");
-    lock(semd);
+    lock_undo(semd);
 
     int *size_p = attach_last_size();
     int size = *size_p;
@@ -63,11 +63,10 @@ int main(void)
     *size_p = strlen(addition);
 
     fputs(addition, f);
-    
+
     detach_last_size(size_p);
     fclose(f);
-    release(semd);
-    
+
     return EXIT_SUCCESS;
 }
 
