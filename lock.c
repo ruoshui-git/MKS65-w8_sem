@@ -10,14 +10,15 @@ void lock(int semd)
     op.sem_num = 0;
     op.sem_flg = 0;
 
-    // wait for it to be released
-    if (semop(semd, &op, 1) == -1)
-    {
-        perror("semop");
-        exit(EXIT_FAILURE);
-    }
+    // causes err
+    // // wait for it to be released
+    // if (semop(semd, &op, 1) == -1)
+    // {
+    //     perror("semop");
+    //     exit(EXIT_FAILURE);
+    // }
 
-    // now sem released, increase it
+    // down it/wait
     op.sem_op = -1;
     if (semop(semd, &op, 1) == -1)
     {
