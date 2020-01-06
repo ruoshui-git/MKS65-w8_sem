@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
         puts("Semaphore created");
         // init sem val
         union semun arg;
-        arg.val = 0;
+        arg.val = 1;
         if (semctl(semd, 0, SETVAL, arg) != 0)
         {
             perror("semctl");
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
             return EXIT_FAILURE;
         }
 
-        lock_undo(semd);
+        lock(semd);
 
         // display the whole file
         display_file();
